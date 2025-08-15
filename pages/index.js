@@ -1,37 +1,29 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [inputUrl, setInputUrl] = useState('');
-  const [proxyUrl, setProxyUrl] = useState('');
+  const [url, setUrl] = useState('');
+  const [html, setHtml] = useState('');
 
-  const handleLoad = () => {
-    if (!inputUrl.startsWith('http')) {
-      alert('Please enter a valid URL');
-      return;
-    }
-    setProxyUrl(`/api/proxy?url=${encodeURIComponent(inputUrl)}`);
+  const fetchContent = async () => {
+    const res = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
+    const text = await res.text();
+    setHtml(text);
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>🔗 Proxy Viewer</h1>
+    <div>
       <input
         type="text"
-        value={inputUrl}
-        onChange={(e) => setInputUrl(e.target.value)}
-        placeholder="Enter URL to load"
-        style={{ width: '60%', padding: '0.5rem' }}
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder="Enter URL"
+        style={{ width: '300px' }}
       />
-      <button onClick={handleLoad} style={{ marginLeft: '1rem' }}>
-        Load
-      </button>
-
-      {proxyUrl && (
-        <iframe
-          src={proxyUrl}
-          style={{ marginTop: '2rem', width: '100%', height: '600px', border: '1px solid #ccc' }}
-        />
-      )}
+      <button onClick={fetchContent}>Fetch</button>
+      <div style={{ marginTop: '20px' }}>
+        <h2>Page HTML:</h2>
+        <pre style={{ whiteSpace: 'pre-wrap' }}>{html}</pre>
+      </div>
     </div>
   );
 }
