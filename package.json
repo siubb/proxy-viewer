@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "chrome-aws-lambda": "^10.1.0",
-    "puppeteer-core": "^21.3.8",
+    "puppeteer-core": "^10.1.0"
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
