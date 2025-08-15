@@ -11,9 +11,18 @@ export default async function handler(req, res) {
   let browser;
 
   try {
+    const executablePath = await chromium.executablePath;
+
+    if (!executablePath) {
+      console.error('Chromium executable not found');
+      return res.status(500).json({ error: 'Chromium executable not found in Vercel environment' });
+    }
+
+    console.log('Using Chromium executable at:', executablePath);
+
     browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath: (await chromium.executablePath) || '/usr/bin/chromium-browser',
+      executablePath,
       headless: chromium.headless,
     });
 
