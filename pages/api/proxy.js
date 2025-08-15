@@ -11,9 +11,10 @@ export default async function handler(req, res) {
   let browser = null;
 
   try {
+    // IMPORTANT: executablePath is a property, NOT a function
     const executablePath = process.env.NODE_ENV === 'production'
-      ? await chromium.executablePath()
-      : '/usr/bin/google-chrome'; // Change this to your local Chrome executable path if needed
+      ? chromium.executablePath
+      : '/usr/bin/google-chrome'; // <-- Adjust this path if running locally on macOS/Windows
 
     if (!executablePath) {
       console.error('Chromium executable not found');
