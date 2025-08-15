@@ -13,13 +13,12 @@ export default async function handler(req, res) {
   try {
     browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath,
+      executablePath: (await chromium.executablePath) || '/usr/bin/chromium-browser',
       headless: chromium.headless,
     });
 
     const page = await browser.newPage();
 
-    // Optional: Set user-agent to avoid bot detection
     await page.setUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
     );
