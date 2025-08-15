@@ -11,14 +11,12 @@ export default async function handler(req, res) {
   let browser = null;
 
   try {
-    // IMPORTANT: executablePath is a property, NOT a function
-    const executablePath = process.env.NODE_ENV === 'production'
-      ? chromium.executablePath
-      : '/usr/bin/google-chrome'; // <-- Adjust this path if running locally on macOS/Windows
+    // On Vercel, chrome-aws-lambda provides executablePath as a string property
+    const executablePath = chromium.executablePath;
 
     if (!executablePath) {
-      console.error('Chromium executable not found');
-      return res.status(500).json({ error: 'Chromium executable not found' });
+      console.error('Chromium executable not found on Vercel');
+      return res.status(500).json({ error: 'Chromium executable not found on Vercel' });
     }
 
     browser = await puppeteer.launch({
