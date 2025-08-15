@@ -1,5 +1,5 @@
-const chromium = require('chrome-aws-lambda');
-const puppeteer = require('puppeteer-core');
+import chromium from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
 
 export default async function handler(req, res) {
   const targetUrl = req.query.url;
@@ -8,17 +8,17 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid or missing "url" query parameter' });
   }
 
-  let browser;
+  let browser = null;
 
   try {
-    const executablePath = await chromium.executablePath;
+    const executablePath = process.env.NODE_ENV === 'production'
+      ? await chromium.executablePath()
+      : '/usr/bin/google-chrome'; // Change this to your local Chrome executable path if needed
 
     if (!executablePath) {
       console.error('Chromium executable not found');
-      return res.status(500).json({ error: 'Chromium executable not found in Vercel environment' });
+      return res.status(500).json({ error: 'Chromium executable not found' });
     }
-
-    console.log('Using Chromium executable at:', executablePath);
 
     browser = await puppeteer.launch({
       args: chromium.args,
